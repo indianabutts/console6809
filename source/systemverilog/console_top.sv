@@ -18,15 +18,16 @@ module console_top(
    logic 			    sram_select_wire;
    logic 			    io_select_wire;
    logic 			    eeprom_select_wire;
-   
+   logic [7:0] 			    buffered_data_bus;
+			    
    //Process to determine whether data_bus is reading or writing
-   always_comb
-     begin:data_bus_assign
-	if (r_nw)
-	  data_bus_l=data_bus;
-	else
-	  data_bus=data_bus_l;
-     end
+   console_transciever inst_txvr (
+				  .oe_n(1'b1),
+				  .t_nr(!r_nw),
+				  .a(data_bus),
+				  .b(buffered_data_bus)
+				  );
+   
    
    //Address Decode
 
